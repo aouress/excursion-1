@@ -51,40 +51,41 @@ void read_file() {
         netlist.close();
     }
     else {
-        cout << "Error during file opening. Check file directory and name" << endl; 
+        cout << "Error while opening file. Check file directory and name" << endl; 
     }
     //calculate dimension of T matrix 
     int dim = 2*length + max_node; 
     //----- 
 
-    // T points to a pointer to an integer
-    int** T = new int* [dim]; // allocate array of pointers to rows
+    // T points to a pointer to an integer; allocate array of pointers to rows 
+    int** T = new int* [dim];
+    // Including the solution column, the dimension of the [T][e] = [0] augmented matrix, [T | 0],
+    // will have dim + 1 columns
     for (int i = 0; i < dim; i++) {
-        T[i] = new int[dim]; // allocate each row 
+        T[i] = new int[dim + 1]; // allocate each row with dim + 1 columns.  
     }
 
     //make zeros matrix 
     for (int i = 0; i < dim; i++) {
-        for (int j = 0; j < dim; j++) {
+        for (int j = 0; j < dim + 1; j++) {
             T[i][j] = 0; 
         }
     }
 
     // output rows 
     for (int i = 0; i < dim; i++) {
-        for (int j = 0; j < dim; j ++) {
+        for (int j = 0; j < dim + 1; j ++) {
             cout << T[i][j] << " "; 
         }
         cout << endl;
     }
 
-
-    //deallocate memory 
+    // deallocate memory 
     for (int i = 0; i < dim; i++) {
         delete [] T[i]; //delete each row pointer 
-    delete [] T; //delete matrix pointer 
     }
-
+    //delete matrix pointer 
+    delete [] T;
 }
 
 int main() {
