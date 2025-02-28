@@ -29,7 +29,7 @@ int find_max_source_node(string line, int max_node) {
 //given a netlist file, read and write the data into appropriate location in the matrix 
 void read_file() {
     fstream netlist;
-    int length;
+    int length = 0;
     int max_node = 0; 
 
     //----
@@ -44,7 +44,7 @@ void read_file() {
             length += 1;
 
             // size of matrix also depends on maximum node value of all source nodes
-            // Therefore, finding the maximum source node is equivalent to finding the size of matrix A
+            // Therefore, finding the maximum source node is equivalent to finding the number of rows of matrix A
             max_node = find_max_source_node(line, max_node); 
         }
         
@@ -53,39 +53,42 @@ void read_file() {
     else {
         cout << "Error while opening file. Check file directory and name" << endl; 
     }
-    //calculate dimension of T matrix 
-    int dim = 2*length + max_node; 
+    //calculate dimension of T matrix | row: # of rows; col: # of cols
+    // Including the solution column, the dimension of the augmented matrix of [T][e] = [0], [T | 0],
+    // row # of rows and row + 1 # of columns
+    int row = 2*length + max_node; 
+    int col = row + 1; 
     //----- 
 
     // T points to a pointer to an integer; allocate array of pointers to rows 
-    int** T = new int* [dim];
-    // Including the solution column, the dimension of the [T][e] = [0] augmented matrix, [T | 0],
-    // will have dim + 1 columns
-    for (int i = 0; i < dim; i++) {
-        T[i] = new int[dim + 1]; // allocate each row with dim + 1 columns.  
+    int** T = new int* [row];
+    for (int i = 0; i < row; i++) {
+        T[i] = new int[col]; // allocate each row with dim + 1 columns.  
     }
 
     //make zeros matrix 
-    for (int i = 0; i < dim; i++) {
-        for (int j = 0; j < dim + 1; j++) {
+    for (int i = 0; i < row; i++) {
+        for (int j = 0; j < col; j++) {
             T[i][j] = 0; 
         }
     }
 
     // output rows 
-    for (int i = 0; i < dim; i++) {
-        for (int j = 0; j < dim + 1; j ++) {
+    for (int i = 0; i < row; i++) {
+        for (int j = 0; j < col; j ++) {
             cout << T[i][j] << " "; 
         }
         cout << endl;
     }
 
     // deallocate memory 
-    for (int i = 0; i < dim; i++) {
+    for (int i = 0; i < row; i++) {
         delete [] T[i]; //delete each row pointer 
     }
     //delete matrix pointer 
     delete [] T;
+
+
 }
 
 int main() {
