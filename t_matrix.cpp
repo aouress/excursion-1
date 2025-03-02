@@ -18,10 +18,6 @@ int find_max_source_node(string line, int max_node) {
     start = end + 1;
     end = line.find(' ', start);
     string sub = line.substr(start, end);
-    
-    //change
-    //change
-    //Change Andreas 2
 
     //new max node found if equality holds 
     if (stoi(sub) > max_node) {
@@ -63,7 +59,7 @@ void read_file() {
     int row = 2*length + max_node; 
     int col = row + 1; 
     //----- 
-
+ 
     // T points to a pointer to an integer; allocate array of pointers to rows 
     int** T = new int* [row];
     for (int i = 0; i < row; i++) {
