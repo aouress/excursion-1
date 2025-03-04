@@ -1,28 +1,22 @@
+// include header file with the parsing function declarations
+#include "parse.h"
 #include <iostream>
-#include <fstream>
-#include <string> 
-#include <vector>
-// fstream documentation | https://cplusplus.com/reference/fstream/
+#include <fstream> // fstream documentation | https://cplusplus.com/reference/fstream/
+#include <string>  // string documentation  | https://cplusplus.com/reference/string/
+#include <vector>  // vector documentation  | https://cplusplus.com/reference/vector/
+#include <cstdlib> // cstdlib documentation | https://cplusplus.com/reference/cstdlib/
 
 using namespace std;
 
 //finds the source node and compares to previous max 
 int find_max_source_node(string line, int max_node) {
     
-    // size_t is the find method's return data type 
-    //http://cplusplus.com/reference/string/string/find/
-    size_t start = 0, end;
-
-    // first space is between component type and source node so skip 
-    end = line.find(' ', start); 
-    //second space is between source node and destination node, giving length of source node for indexing
-    start = end + 1;
-    end = line.find(' ', start);
-    string sub = line.substr(start, end);
+    // finds source node and returns as int
+    int s_node = get_sord(line, 's'); 
 
     //new max node found if equality holds 
-    if (stoi(sub) > max_node) {
-        max_node = stoi(sub); 
+    if (s_node > max_node) {
+        max_node = s_node;  
     }
     return max_node; 
 }
@@ -56,14 +50,14 @@ void read_file() {
     }
     //calculate dimension of T matrix | row: # of rows; col: # of cols
     // Including the solution column, the dimension of the augmented matrix of [T][e] = [0], [T | 0],
-    // row # of rows and row + 1 # of columns
-    int row = 2*length + max_node; 
+    // row # of rows and row + 1 # of columns 
+    int row = 2*length + max_node;    
     int col = row + 1; 
     //----- 
  
     // Declares a nested vector that has row number of row vectors to form the [T | u]
     // augmented matrix
-    vector<vector<int>> Tu(row, vector<int>(col, 0)); 
+    vector<vector<float>> Tu(row, vector<float>(col, 0)); 
 
     //make zeros matrix 
     for (int i = 0; i < row; i++) {
