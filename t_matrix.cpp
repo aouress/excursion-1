@@ -8,16 +8,13 @@
 using namespace std;
 
 int get_sord (string line, char code) {
-    // given a line and a code return the desired float number
+    // given a line and a code return the desired integer source or destination node
     // code 's': source 
     // code 'd': destination
 
-    fstream netlist;
     // size_t is the find method's return data type 
     size_t start = 0, end; 
     string sub; 
-
-    netlist.open("netlist.txt", ios::in); 
 
     if (code == 's') {
         
@@ -42,7 +39,8 @@ int get_sord (string line, char code) {
     else {
         cout << "Invalid code for finding source or destination node" << endl; 
     }
-    netlist.close();
+
+    // return the string as an integer 
     return stoi(sub);
 }
 
