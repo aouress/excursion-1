@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string> 
+#include <vector>
 // fstream documentation | https://cplusplus.com/reference/fstream/
 
 using namespace std;
@@ -60,35 +61,24 @@ void read_file() {
     int col = row + 1; 
     //----- 
  
-    // T points to a pointer to an integer; allocate array of pointers to rows 
-    int** T = new int* [row];
-    for (int i = 0; i < row; i++) {
-        T[i] = new int[col]; // allocate each row with dim + 1 columns.  
-    }
+    // Declares a nested vector that has row number of row vectors to form the [T | u]
+    // augmented matrix
+    vector<vector<int>> Tu(row, vector<int>(col, 0)); 
 
     //make zeros matrix 
     for (int i = 0; i < row; i++) {
         for (int j = 0; j < col; j++) {
-            T[i][j] = 0; 
+            Tu[i][j] = 0; 
         }
     }
 
     // output rows 
     for (int i = 0; i < row; i++) {
         for (int j = 0; j < col; j ++) {
-            cout << T[i][j] << " "; 
+            cout << Tu[i][j] << " "; 
         }
         cout << endl;
     }
-
-    // deallocate memory 
-    for (int i = 0; i < row; i++) {
-        delete [] T[i]; //delete each row pointer 
-    }
-    //delete matrix pointer 
-    delete [] T;
-
-
 }
 
 int main() {
