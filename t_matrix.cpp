@@ -8,14 +8,12 @@
 
 using namespace std;
 
-
-//Function to add the m-matrix (identity) into the t-matrix
-void insertMMatrix(<vector<vector<int>>& T, int max_node, int length) {
+void insertMMatrix(vector<vector<float>>& Tu, int max_node, int length) {
     int startRow = max_node+length;  //The index of the row is after max_node and length
     int startCol = max_node;         //Places identity matrix to the right by the size of max_node
 
-    for (int i = 0; i < length; i++) {
-        T[startRow + i][startCol + i] = 1;  //Diagonally adds 1s
+    for (int i = 0; i<length; i++) {
+        Tu[startRow+i][startCol+i] = 1; //Diagonally adds 1s
     }
 }
 
@@ -85,19 +83,22 @@ void read_file() {
         cout << endl;
     }
 
-
     //Inserting the m-matrix
-    insertMMatrix(Tu,max_node,length);
+    insertMMatrix(Tu, max_node, length);
 
     //Showing the matrix after inserting m-matrix
     cout << "\nT matrix with M-matrix:" << endl;
-    for (int i=0; i <row; i++) {
-        for (int j = 0; j < col;j++){
-            cout << Tu[i][j]<<" "; 
+    for (int i = 0; i < row; i++) {
+        for (int j = 0; j < col; j++) {
+            cout << Tu[i][j] << " "; 
         }
-        cout << endl;    
+        cout << endl;
     }
+
 }
+
 int main() {
     read_file();
 }
+
+
