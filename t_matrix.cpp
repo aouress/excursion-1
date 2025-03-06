@@ -1,5 +1,6 @@
-// include header file with the parsing function declarations
-#include "parse.h"
+// good video on headers: https://www.youtube.com/watch?v=9RJTQmK0YPI
+// also a useful article on headers: https://learn.microsoft.com/en-us/cpp/cpp/header-files-cpp?view=msvc-170
+#include "parse.h" // include header file with the parsing function declarations
 #include <iostream>
 #include <fstream> // fstream documentation | https://cplusplus.com/reference/fstream/
 #include <string>  // string documentation  | https://cplusplus.com/reference/string/
@@ -7,6 +8,17 @@
 #include <cstdlib> // cstdlib documentation | https://cplusplus.com/reference/cstdlib/
 
 using namespace std;
+
+void insertMMatrix(vector<vector<float>>& T, int max_node, int length) {
+    int startRow = max_node+length;  //The index of the row is after max_node and length
+    int startCol = max_node;         //Places identity matrix to the right by the size of max_node
+
+    for (int i = 0; i < length; i++) {
+        T[startRow + i][startCol + i] = 1;  //Diagonally adds 1s
+    }
+}
+
+int solve_matrix(vector<vector<float>> &T, int max_node, int length); 
 
 //finds the source node and compares to previous max 
 int find_max_source_node(string line, int max_node) {
@@ -59,12 +71,7 @@ void read_file() {
     // augmented matrix
     vector<vector<float>> Tu(row, vector<float>(col, 0)); 
 
-    //make zeros matrix 
-    for (int i = 0; i < row; i++) {
-        for (int j = 0; j < col; j++) {
-            Tu[i][j] = 0; 
-        }
-    }
+    insertMMatrix(Tu, max_node, length); 
 
     // output rows 
     for (int i = 0; i < row; i++) {
@@ -77,4 +84,8 @@ void read_file() {
 
 int main() {
     read_file();
+}
+
+int solve_matrix(vector<vector<float>> &T, int max_node, int length) {
+    //iterate through each row. Find a nonzero pivot in the column. increment a pivot row counter.  
 }

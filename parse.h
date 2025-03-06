@@ -11,4 +11,4 @@ char get_type(string line);
 
 float get_value(string line);  
 
-#endif PARSE_H
+#endif
