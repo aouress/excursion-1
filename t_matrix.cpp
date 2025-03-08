@@ -44,7 +44,8 @@ int find_max_source_node(string line, int max_node) {
 }
 
 //given a netlist file, read and write the data into appropriate location in the matrix 
-int read_file() {
+int read_file() 
+{
     fstream netlist;
     int length = 0;
     int max_node = 0; 
@@ -71,6 +72,7 @@ int read_file() {
     else {
         cout << "Error while opening file. Check file directory and name" << endl; 
     }
+
     //calculate dimension of T matrix | row: # of rows; col: # of cols
     // Including the solution column, the dimension of the augmented matrix of [T][e] = [0], [T | 0],
     // row # of rows and row + 1 # of columns 
@@ -82,6 +84,35 @@ int read_file() {
     // Declares a nested vector that has row number of row vectors to form the [T | u]
     // augmented matrix
     vector<vector<double>> Tu(row, vector<double>(col, 0)); 
+
+
+
+    // Places At into Tu
+    netlist.open("netlist.txt", ios::in);
+    if (netlist.is_open()) {
+        string line; 
+        
+            for(int i = 0; i < length; i++) {
+                getline(netlist, line);
+
+               Tu[get_sord(line, 's')-1][i + max_node + length] = 1;
+
+               if (get_sord(line, 'd') != 0){
+                     Tu[get_sord(line, 'd')-1][i + max_node + length] = -1;
+               }
+               
+            }
+       // Tu[max_node][length] =  get_sord (line, 's');
+
+        
+    
+    
+    netlist.close();
+}
+else {
+    cout << "Error while opening file. Check file directory and name" << endl; 
+}
+
 
 
     // random 8x9 matrix for testing the row reduction algorithm 
@@ -125,8 +156,12 @@ int read_file() {
     }
     cout << endl;
     return 1;
+    
 }
 
 int main() {
     read_file();
+
+    
+
 }
