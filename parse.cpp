@@ -78,12 +78,16 @@ float get_value(string line) {
 //finds the source node and compares to previous max 
 int find_max_source_node(string line, int max_node) {
     
-    // finds source node and returns as int
+    // find source and destination nodes 
     int s_node = get_sord(line, 's'); 
+    int dest_node = get_sord(line, 'd'); 
 
-    //new max node found if equality holds 
+    //the source or destination is the new max node if it is greater than the current max node
     if (s_node > max_node) {
         max_node = s_node;  
+    }
+    else if (dest_node > max_node) {
+        max_node = dest_node; 
     }
     return max_node; 
 }
