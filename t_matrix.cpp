@@ -112,6 +112,27 @@ void addN(vector<vector<float>>& Tu, int max_node, int length) {
     }
 }
 
+void transposeA(vector<vector<float>>& Tu, int max_node, int length) {
+    //How many rows and columns in the -At matrix
+    int rows = length;     
+    int cols = max_node
+
+    //Rows and columns for A
+    int startRow = 0;  //It is at the top of Tu matrix
+    int startCol = max_node+length; //because its located at max_node+length
+
+    //Rows and columns for -At
+    int startRow_2 = max_node;  //The index of the row is after max_node and length
+    int startCol_2 = 0; //Places -At matrix at 0
+
+    // Fill -At with negative transposed values of A
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            Tu[startRow_2+j][startCol_2+i] = (-1)*(Tu[startCol+j][startRow+i]);
+        }
+    }
+}
+
 //finds the source node and compares to previous max 
 int find_max_source_node(string line, int max_node) {
     
