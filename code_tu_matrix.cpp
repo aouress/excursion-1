@@ -60,7 +60,7 @@ void addIs(vector<vector<double>>& Tu, int max_node, int length) {
     //Adds an identity and M matrices to Tu matrix
     for (int i = 0; i < length; i++) {
         Tu[startRow + i][startCol + i] = 1; //Diagonally adds 1s
-        Tu[max_node + startRow + i + 1][startCol + i] = 1;
+        Tu[length + startRow + i][startCol + i] = 1;
     }
 }
 
