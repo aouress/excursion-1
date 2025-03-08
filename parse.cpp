@@ -16,7 +16,7 @@ int get_sord (string line, char code) {
     size_t start = 0, end; 
     string sub; 
 
-    if (code == 's') {
+    if (code == 's') {  
         
         // first space is between component type and source node so skip 
         end = line.find(' ', start);     
