@@ -1,3 +1,4 @@
+// contains function signatures used to solve and verify the [T | u] matrix
 #ifndef MATRIX_SOLVE
 #define MATRIX_SOLVE
 

@@ -1,3 +1,4 @@
+// contains all function definitions for parsing the netlist given a single line as an input
 #include "parse.h"
 #include <iostream>
 #include <fstream> // fstream documentation | https://cplusplus.com/reference/fstream/
@@ -72,4 +73,17 @@ float get_value(string line) {
     
     // use cstdlib to convert from c-string to float 
     return atof(sub.c_str());
+}
+
+//finds the source node and compares to previous max 
+int find_max_source_node(string line, int max_node) {
+    
+    // finds source node and returns as int
+    int s_node = get_sord(line, 's'); 
+
+    //new max node found if equality holds 
+    if (s_node > max_node) {
+        max_node = s_node;  
+    }
+    return max_node; 
 }
