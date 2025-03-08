@@ -14,7 +14,7 @@
 using namespace std;
 
  
-void print_matrix (vector<vector<double>> &Tu, int row, int col) {
+/*void print_matrix (vector<vector<double>> &Tu, int row, int col) {
     // prints matrix given max row and col values  
     for (int i = 0; i < row; i++) {
         for (int j = 0; j < col; j ++) {
@@ -23,7 +23,7 @@ void print_matrix (vector<vector<double>> &Tu, int row, int col) {
         cout << endl;
     }  
     cout << endl; 
-}
+}*/
 
 void write_file(vector<double> &s, int row) {
     // writes output.txt file given the solution vector and row count 
@@ -90,24 +90,18 @@ int main() {
     addMu(Tu, max_node, length); 
     addN(Tu, max_node, length); 
     
-    print_matrix(Tu, row, col); 
     
     //compute row echelon form of the matrix
-    ref_matrix(Tu, max_node, length, row, col); 
+    ref_matrix(Tu, max_node, length, row, col);  
 
-    print_matrix(Tu, row, col); 
-
-
-    /* check if the matrix has a unique solution 
+    //check if the matrix has a unique solution 
     if (!valid_matrix(Tu, row, col)) {
         cout << "The netlist provided describes an invalid circuit configuration" << endl; 
         return 0;
-    }*/
+    }
 
     // compute the reduced row echelon form of the matrix by back substitution of the row echelon matrix 
     back_sub(Tu, row, col); 
-
-    print_matrix(Tu, row, col); 
 
     // declare a vector to hold the u column in the [T | u] matrix 
     vector<double> solution_vector(row); 
