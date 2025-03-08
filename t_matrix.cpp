@@ -15,6 +15,14 @@ void insertMMatrix(vector<vector<float>>& Tu, int max_node, int length) {
     for (int i = 0; i<length; i++) {
         Tu[startRow+i][startCol+i] = 1; //Diagonally adds 1s
     }
+
+    int startRow = max_node;  //The index of the row is after max_node
+    int startCol = max_node;         //Places identity matrix to the right by the size of max_node
+    
+    //Adds an identity matrix in the center
+    for (int i = 0; i<length; i++) {
+        Tu[startRow+i][startCol+i] = 1; //Diagonally adds 1s
+    }
 }
 
 //finds the source node and compares to previous max 
