@@ -59,12 +59,55 @@ void addMu(vector<vector<float>>& Tu, int max_node, int length) {
 
     //Determining where the muS matrix is in the tu matrix
     int startRow = max_node+length;  //The index of the row is after max_node and length
-    int startCol = max_node+length+length; //Places identity matrix to the right by the size of max_node and two lengths
+    int startCol = max_node+length+length; //Places mu matrix to the right by the size of max_node and two lengths
     int i=0; //to iterate through the matrix rows
 
     //Add voltages to muS, iterating through the voltage vector
     for (double v : voltages) {
         Tu[startRow+i][startCol] = v;
+        i++;
+    }
+}
+
+void addN(vector<vector<float>>& Tu, int max_node, int length) {
+    
+    //Reading the text file and storing values
+    string stream; //String to hold the data in the text file
+    ifstream MyReadFile("netlist.txt"); //reading the text file
+
+    vector<double> resistances; //vector to store values in the string
+
+    //Reading the file line by line
+    while (getline(MyReadFile, stream)) {
+        istringstream iss(stream);
+        string component;
+        int node1, node2;
+        double value;
+
+        // Extract resistances from line
+        if (iss >>component >>node1 >>node2 >>value) {
+            //If the component starts with 'R', then save the value
+            if (component[0] == 'R') {
+                resistances.push_back((value*-1.0));
+            }
+            //If not, place a '0' as a placeholder
+            else {
+                resistances.push_back(0);
+            }
+        }
+    }
+
+    //Close the file
+    MyReadFile.close();
+
+    //Determining where the muS matrix is in the tu matrix
+    int startRow = max_node+length;  //The index of the row is after max_node and length
+    int startCol = max_node+length; //Places N matrix to the right by the size of max_node and length
+    int i=0; //to iterate through the matrix rows
+
+    //Add voltages to muS, iterating through the voltage vector
+    for (double v : resistances) {
+        Tu[startRow+i][startCol+i] = v;
         i++;
     }
 }
@@ -135,8 +178,9 @@ void read_file() {
         cout << endl;
     }
 
-    //Inserting the m-matrix
+    //Inserting the m-matrix, n-matrix, and mu-matrix
     insertMMatrix(Tu, max_node, length);
+    addN(Tu, max_node, length);
     addMu(Tu, max_node, length);
 
     //Showing the matrix after inserting m-matrix
