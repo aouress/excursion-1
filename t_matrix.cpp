@@ -30,6 +30,24 @@ void print_matrix (vector<vector<double>> &Tu, int row, int col) {
     }  
     cout << endl; 
 }
+
+void write_file(vector<double> &s, int row) {
+    // writes output.txt file given the solution vector and row count 
+    fstream out_file;
+    string file_name = "output.txt"; 
+
+    out_file.open(file_name, ios::out);
+    if (out_file.is_open()) {
+        for (int i = 0; i < row; i++) {
+            out_file << s[i] << " "; 
+        }
+    }
+    else {
+        cout << "Error opening output file." << endl; 
+    }
+
+}
+
 //finds the source node and compares to previous max 
 int find_max_source_node(string line, int max_node) {
     
@@ -124,6 +142,7 @@ int read_file() {
         cout << solution_vector[i] << " ";
     }
     cout << endl;
+    write_file(solution_vector, row); 
     return 1;
 }
 
