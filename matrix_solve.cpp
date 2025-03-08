@@ -1,3 +1,4 @@
+// contains function defintions used to solve and verify the [T | u] matrix
 #include "matrix_solve.h"
 #include <iostream>
 #include <fstream> // fstream documentation | https://cplusplus.com/reference/fstream/
@@ -119,7 +120,6 @@ bool valid_matrix (vector<vector<double>> &Tu, int row, int col) {
     }
     return false;
 }
-
 
 void matrix_threshold (vector<vector<double>> &Tu, int row, int col) {
     // upon testing the function with an arbitrary matrix, some values that should be exactly zero (and are very close to being zero; e.g., 1e^-9) are not zero. 

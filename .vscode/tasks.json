@@ -9,6 +9,7 @@
                 "-g",
                 "parse.cpp",
                 "matrix_solve.cpp",
+                "code_tu_matrix.cpp",
                 "${file}",
                 "-o",
                 "${fileDirname}\\${fileBasenameNoExtension}.exe"

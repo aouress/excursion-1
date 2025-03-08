@@ -3,23 +3,17 @@
 
 #include "parse.h" // include header file with the parsing function declarations
 #include "matrix_solve.h" // include header file with matrix solving function declarations
+#include "code_tu_matrix.h" // include header file with matrix coding functions 
 #include <iostream>
 #include <fstream> // fstream documentation | https://cplusplus.com/reference/fstream/
 #include <string>  // string documentation  | https://cplusplus.com/reference/string/
 #include <vector>  // vector documentation  | https://cplusplus.com/reference/vector/
 #include <cstdlib> // cstdlib documentation | https://cplusplus.com/reference/cstdlib/
+#include <sstream> // sstream documentation | https://cplusplus.com/reference/sstream/
 
 using namespace std;
 
-void insertMMatrix(vector<vector<double>>& T, int max_node, int length) {
-    int startRow = max_node+length;  //The index of the row is after max_node and length
-    int startCol = max_node;         //Places identity matrix to the right by the size of max_node
-
-    for (int i = 0; i < length; i++) {
-        T[startRow + i][startCol + i] = 1;  //Diagonally adds 1s
-    }
-}
-
+/* Archived function for printing the matrix 
 void print_matrix (vector<vector<double>> &Tu, int row, int col) {
     // prints matrix given max row and col values  
     for (int i = 0; i < row; i++) {
@@ -30,14 +24,17 @@ void print_matrix (vector<vector<double>> &Tu, int row, int col) {
     }  
     cout << endl; 
 }
+*/
 
 void write_file(vector<double> &s, int row) {
     // writes output.txt file given the solution vector and row count 
     fstream out_file;
     string file_name = "output.txt"; 
 
+    // open the new output file and configure it such that we can write to it 
     out_file.open(file_name, ios::out);
     if (out_file.is_open()) {
+        // for each element in the solution vector, write the value with a space between in the output.txt file 
         for (int i = 0; i < row; i++) {
             out_file << s[i] << " "; 
         }
@@ -45,24 +42,11 @@ void write_file(vector<double> &s, int row) {
     else {
         cout << "Error opening output file." << endl; 
     }
-
-}
-
-//finds the source node and compares to previous max 
-int find_max_source_node(string line, int max_node) {
-    
-    // finds source node and returns as int
-    int s_node = get_sord(line, 's'); 
-
-    //new max node found if equality holds 
-    if (s_node > max_node) {
-        max_node = s_node;  
-    }
-    return max_node; 
+    out_file.close(); 
 }
 
 //given a netlist file, read and write the data into appropriate location in the matrix 
-int read_file() {
+int main() {
     fstream netlist;
     int length = 0;
     int max_node = 0; 
@@ -101,27 +85,15 @@ int read_file() {
     // augmented matrix
     vector<vector<double>> Tu(row, vector<double>(col, 0)); 
 
+    // code KCL, KVL, and Ohm's law into the [T | u] matrix 
+    add_KCL_KVL(Tu, max_node, length); 
+    addIs(Tu, max_node, length); 
+    addMu(Tu, max_node, length); 
+    addN(Tu, max_node, length); 
+    
 
-    // random 8x9 matrix for testing the row reduction algorithm 
-    Tu = {
-        {2, 3, -1, 4, 5, 0, -2, 1, 7},
-        {1, -2, 3, -4, 5, -6, 7, -8, 9},
-        {0, 5, -2, 3, 1, -4, 6, 2, -3},
-        {4, -1, 2, -5, 3, 6, -7, 8, 0},
-        {3, 2, -4, 1, -6, 5, -7, 9, -8},
-        {-2, 4, -1, 3, -5, 2, 6, -8, 7},
-        {5, -3, 2, -1, 4, -7, 8, -6, 9},
-        {1, 6, -5, 3, -2, 7, -4, 0, 8}
-    };
-
-    //insertMMatrix(Tu, max_node, length); 
-
-    // output rows 
-    print_matrix(Tu, row, col);  
-
-    //compute reduced echelon form of the matrix
+    //compute row echelon form of the matrix
     ref_matrix(Tu, max_node, length, row, col); 
-    print_matrix(Tu, row, col); 
 
     // check if the matrix has a unique solution 
     if (!valid_matrix(Tu, row, col)) {
@@ -132,20 +104,15 @@ int read_file() {
     // compute the reduced row echelon form of the matrix by back substitution of the row echelon matrix 
     back_sub(Tu, row, col); 
 
-    // output rows 
-    print_matrix(Tu, row, col); 
-
+    // declare a vector to hold the u column in the [T | u] matrix 
     vector<double> solution_vector(row); 
 
+    // assigning the solution vector to be the last column of the Tu matrix (u column) 
     for (int i = 0; i < row; i ++) {
         solution_vector[i] = Tu[i][col-1]; 
-        cout << solution_vector[i] << " ";
     }
-    cout << endl;
+
+    // create an output.txt file that contains the solution vector. 
     write_file(solution_vector, row); 
     return 1;
-}
-
-int main() {
-    read_file();
 }
