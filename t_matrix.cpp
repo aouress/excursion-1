@@ -8,15 +8,133 @@
 #include <string>  // string documentation  | https://cplusplus.com/reference/string/
 #include <vector>  // vector documentation  | https://cplusplus.com/reference/vector/
 #include <cstdlib> // cstdlib documentation | https://cplusplus.com/reference/cstdlib/
+#include <sstream> // sstream documentation | https://cplusplus.com/reference/sstream/
 
 using namespace std;
 
-void insertMMatrix(vector<vector<double>>& T, int max_node, int length) {
-    int startRow = max_node+length;  //The index of the row is after max_node and length
-    int startCol = max_node;         //Places identity matrix to the right by the size of max_node
+void addA_AT_Matrix(vector<vector<double>> &Tu, int max_node, int length) {
+    // Places A into Tu
+    fstream netlist;
 
-    for (int i = 0; i < length; i++) {
-        T[startRow + i][startCol + i] = 1;  //Diagonally adds 1s
+    netlist.open("netlist.txt", ios::in);
+    if (netlist.is_open()) {
+        string line; 
+        
+            for(int i = 0; i < length; i++) {
+                getline(netlist, line);
+
+                Tu[get_sord(line, 's')-1][i + max_node + length] = 1;
+                
+                if (get_sord(line, 'd') != 0){
+                        Tu[get_sord(line, 'd')-1][i + max_node + length] = -1;
+                }
+               
+            }
+       // Tu[max_node][length] =  get_sord (line, 's');
+    }
+}
+
+// adds identity matrix and M matrix to Tu matrix
+void addM_IMatrix(vector<vector<double>>& Tu, int max_node, int length) {
+    int startRow = max_node+length; //The index of the row is after max_node and length
+    int startCol = max_node; //Places identity matrix to the right by the size of max_node
+
+    for (int i = 0; i<length; i++) {
+        Tu[startRow+i][startCol+i] = 1; //Diagonally adds 1s
+    }
+
+    startRow = max_node; //The index of the row is after max_node
+    startCol = max_node; //Places identity matrix to the right by the size of max_node
+
+    //Adds an identity matrix in the center
+    for (int i = 0; i<length; i++) {
+        Tu[startRow+i][startCol+i] = 1; //Diagonally adds 1s
+    }
+}
+
+void addMu(vector<vector<double>>& Tu, int max_node, int length) {
+
+    //Reading the text file and storing voltages
+    string stream; //String to hold the data in the text file
+    ifstream MyReadFile("netlist.txt"); //reading the text file
+
+    vector<double> voltages; //vector to store voltages in the string
+
+    //Reading the file line by line
+    while (getline(MyReadFile, stream)) {
+        istringstream iss(stream);
+        string component;
+        int node1, node2;
+        double value;
+
+        // Extract values from line
+        if (iss >>component >>node1 >>node2 >>value) {
+            //If the component starts with 'V', then save the value
+            if (component[0] == 'V') {
+                voltages.push_back(value);
+            }
+            //If not, place a '0' as a placeholder
+            else {
+                voltages.push_back(0);
+            }
+        }
+    }
+
+    //Close the file
+    MyReadFile.close();
+
+    //Determining where the muS matrix is in the tu matrix
+    int startRow = max_node+length;  //The index of the row is after max_node and length
+    int startCol = max_node+length+length; //Places mu matrix to the right by the size of max_node and two lengths
+    int i=0; //to iterate through the matrix rows
+
+    //Add voltages to muS, iterating through the voltage vector
+    for (double v : voltages) {
+        Tu[startRow+i][startCol] = v;
+        i++;
+    }
+}
+
+void addN(vector<vector<double>>& Tu, int max_node, int length) {
+
+    //Reading the text file and storing values
+    string stream; //String to hold the data in the text file
+    ifstream MyReadFile("netlist.txt"); //reading the text file
+
+    vector<double> resistances; //vector to store values in the string
+
+    //Reading the file line by line
+    while (getline(MyReadFile, stream)) {
+        istringstream iss(stream);
+        string component;
+        int node1, node2;
+        double value;
+
+        // Extract resistances from line
+        if (iss >>component >>node1 >>node2 >>value) {
+            //If the component starts with 'R', then save the value
+            if (component[0] == 'R') {
+                resistances.push_back((value*-1.0));
+            }
+            //If not, place a '0' as a placeholder
+            else {
+                resistances.push_back(0);
+            }
+        }
+    }
+
+    //Close the file
+    MyReadFile.close();
+
+    //Determining where the muS matrix is in the tu matrix
+    int startRow = max_node+length;  //The index of the row is after max_node and length
+    int startCol = max_node+length; //Places N matrix to the right by the size of max_node and length
+    int i=0; //to iterate through the matrix rows
+
+    //Add voltages to muS, iterating through the voltage vector
+    for (double v : resistances) {
+        Tu[startRow+i][startCol+i] = v;
+        i++;
     }
 }
 
@@ -103,7 +221,7 @@ int read_file() {
 
 
     // random 8x9 matrix for testing the row reduction algorithm 
-    Tu = {
+    /*Tu = {
         {2, 3, -1, 4, 5, 0, -2, 1, 7},
         {1, -2, 3, -4, 5, -6, 7, -8, 9},
         {0, 5, -2, 3, 1, -4, 6, 2, -3},
@@ -112,9 +230,13 @@ int read_file() {
         {-2, 4, -1, 3, -5, 2, 6, -8, 7},
         {5, -3, 2, -1, 4, -7, 8, -6, 9},
         {1, 6, -5, 3, -2, 7, -4, 0, 8}
-    };
+    };*/
 
-    //insertMMatrix(Tu, max_node, length); 
+    addA_AT_Matrix(Tu, max_node, length); 
+    addM_IMatrix(Tu, max_node, length); 
+    addMu(Tu, max_node, length); 
+    addN(Tu, max_node, length); 
+    
 
     // output rows 
     print_matrix(Tu, row, col);  
