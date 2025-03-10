@@ -24,7 +24,7 @@ We will not be attempting the bonus.
 
 ### Terminal 
 1. Navigate to the directory that includes the project files. You will need all `.cpp` and `.h` files included in the submission.
-2. Ensure that a file named `netlist.txt` containing the resistive circuit is located in the same directory as all other files.  
+2. Ensure that a file named `netlist.txt` containing the resistive circuit is located in the same directory as all other files. There should be no empty lines in the file.
 3. Run the following command to compile the program and generate the `ex1` executable:
 
 ```
