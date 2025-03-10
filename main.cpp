@@ -10,10 +10,11 @@
 #include <vector>  // vector documentation  | https://cplusplus.com/reference/vector/
 #include <cstdlib> // cstdlib documentation | https://cplusplus.com/reference/cstdlib/
 #include <sstream> // sstream documentation | https://cplusplus.com/reference/sstream/
-
+#include <iomanip> // iomanip documentation | https://cplusplus.com/reference/iomanip/
+ 
 using namespace std;
 
- 
+// Archived testing function
 /*void print_matrix (vector<vector<double>> &Tu, int row, int col) {
     // prints matrix given max row and col values  
     for (int i = 0; i < row; i++) {
@@ -33,9 +34,9 @@ void write_file(vector<double> &s, int row) {
     // open the new output file and configure it such that we can write to it 
     out_file.open(file_name, ios::out);
     if (out_file.is_open()) {
-        // for each element in the solution vector, write the value with a space between in the output.txt file 
+        // for each element in the solution vector, write the value with a space between in the output.txt file to 3 decimal points 
         for (int i = 0; i < row; i++) {
-            out_file << s[i] << " "; 
+            out_file << fixed << setprecision(3) << s[i] << " "; 
         }
     }
     else {
@@ -70,7 +71,8 @@ int main() {
         netlist.close();
     }
     else {
-        cout << "Error while opening file. Check file directory and name" << endl; 
+        cout << "Error while opening file. Check file directory and name." << endl; 
+        return 0;
     }
     //calculate dimension of T matrix | row: # of rows; col: # of cols
     // Including the solution column, the dimension of the augmented matrix of [T][e] = [0], [T | 0],
@@ -89,7 +91,6 @@ int main() {
     addIs(Tu, max_node, length); 
     addMu(Tu, max_node, length); 
     addN(Tu, max_node, length); 
-    
     
     //compute row echelon form of the matrix
     ref_matrix(Tu, max_node, length, row, col);  
